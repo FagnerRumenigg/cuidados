@@ -1,56 +1,41 @@
-# Welcome to your Expo app 👋
+# Cuidados
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Aplicativo pessoal para Android, feito com Expo SDK 57 e React Native. Os artigos ficam no app e as datas de acompanhamento são guardadas somente no aparelho com AsyncStorage. Não há servidor nem conta.
 
-## Get started
-
-1. Install dependencies
-
-   ```bash
-   npm install
-   ```
-
-2. Start the app
-
-   ```bash
-   npx expo start
-   ```
-
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+## Rodar
 
 ```bash
-npm run reset-project
+npm install
+npm start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+Para gerar o bundle Android e verificar o código:
 
-### Other setup steps
+```bash
+npm run catalog
+npx tsc --noEmit
+npm run lint
+npx expo export --platform android
+```
 
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
+## Conteúdo
 
-## Learn more
+Os ambientes estão em `content/sections.json`. Cada cuidado é um JSON separado em `content/`. O campo `section` do artigo aponta para o `id` do ambiente. Título, texto, fontes, intervalo sugerido e frases dos lembretes vêm desses arquivos. Ao adicionar ou editar um JSON, execute `npm run catalog` (também roda automaticamente antes de `npm start`, `npm run android`, `npm run web` e `npm run lint`).
 
-To learn more about developing your project with Expo, look at the following resources:
+As datas, os intervalos personalizados e o horário dos lembretes ficam separados do conteúdo editorial. O prazo é presumido após passar o dia previsto; a interface distingue presunção de ação confirmada. Registrar a data real reinicia o ciclo a partir dela.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+## Testar o aviso agrupado
 
-## Join the community
+No Android, abra **Ajustes → Teste das notificações → Preparar teste**. O app guarda suas datas e preferências, configura os quatro cuidados para o dia seguinte e agenda um aviso agrupado para 12h da véspera. Se 12h já passou no horário local do aparelho, agenda para alguns minutos à frente. A tela confirma se encontrou exatamente um aviso agrupado na fila do Android. Depois de conferir a entrega, toque em **Restaurar minhas datas e horário**. Deixe as notificações permitidas nas configurações do aparelho.
 
-Join our community of developers creating universal apps.
+## APK pessoal
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+O perfil `preview` em `eas.json` gera um APK para instalação direta. Depois de entrar na sua conta Expo:
+
+```bash
+npx eas-cli@latest login
+npx eas-cli@latest build --platform android --profile preview
+```
+
+O identificador Android é `com.fagne.cuidados`. Para futuras atualizações, preserve esse identificador e as credenciais de assinatura geridas pelo EAS, e aumente `android.versionCode` em `app.json`. Teste as notificações no aparelho, incluindo a permissão do Android e o horário de 20h, antes de confiar nos lembretes.
+# cuidados
